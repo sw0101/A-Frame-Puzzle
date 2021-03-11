@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>A-Frame Puzzle</title>
+	<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+	<script src="https://unpkg.com/aframe-event-set-component@5.0.0/dist/aframe-event-set-component.min.js"></script>
+</head>
+
+<body>
+	<a-scene>
+		<a-assets>
+		<!--Sky Credit: HLDR-->
+		<img id="sky" src="assets/sky.jpg">
+		<!--Castle: https://sketchfab.com/3d-models/granny-castle-725c0e25bb5849b4af170305064af95a-->
+		<a-asset-item id="ireland" src="assets/castle/scene.gltf"></a-asset-item>
+		<!--Mars: HDPlanetModels-->
+		<a-asset-item id="sword" src="assets/sword/scene.gltf"></a-asset-item>
+		<!--Falcon 9 Model: https://sketchfab.com/3d-models/falcon-9-block-5-crew-dragon-3d-model-eb5443011f8d4fe6bd2b680f6f15043c-->
+		<a-asset-item id="falcon9" src="assets/falcon9/scene.gltf"></a-asset-item>
+		<a-asset-item id="falcon9fly" src="assets/falcon9fly/scene.gltf"></a-asset-item>
+			<!--Sketch Fab-->
+		<a-asset-item id="muskisdad" src="assets/muskisdad/scene.gltf"></a-asset-item>
+			<!--Sketch Fab-->
+		<a-asset-item id="joystick" src="assets/joystick/scene.gltf"></a-asset-item>
+			<!--Sketch Fab-->
+		<a-asset-item id="computer" src="assets/computer/scene.gltf"></a-asset-item>
+	</a-assets>
+
+
+<!-- Final Step: Motion Copy of ship for movement.-->
+<a-entity id="ssmove" gltf-model="#falcon9fly" scale="0.1 0.1 0.1" position="108 -70 68.710" visible="false"
+animation__f9_move="dur:10000-;from: 108 -70 68;to:108 1000 68;loop:-1;property:position;"
+
+></a-entity>
+
+<!-- Camera Controls -->
+		<a-entity id="CAMERACONTROL" position="-300 -60 -100" rotation="0 -120 0">		<!---300 -60 -100 = optimal for viewing-->
+		<a-camera id="CAMERACONTROL1" wasd-controls="acceleration: 1000">
+
+			<a-entity cursor="fuse:true; fuseTimeout: 2000" geometry="primitive: sphere; radius:0.005"
+				material="color:white;" position="0 0 -1" animation__enter="property: scale; to: 3 3 3;
+			dur:2000;
+			easing:linear;
+			startEvents: mouseenter;"
+			event-set__reset="_event: animationcomplete__enter; scale: 1 1 1"
+			animation__leave="property: scale; to:1 1 1; dur: 2000; easing: linear; startEvents: mouseleave;"
+			
+			
+			></a-entity>
+		</a-camera>
+		</a-entity>
+<!--Main Scene Ground (Castle)-->
+		<a-entity gltf-model="#ireland" scale="30 30 30" position="0 -150 0"></a-entity>
+		<!--1st step - sword moves falcon 9 model-->
+		<a-entity gltf-model="#sword" id="sword_name" scale="10 10 10" position="-210 -40 -40" rotation="0 -120 0"
+		event-set__movefalcon9="_event: click; _target:#falcon_9; position:-130 10 -40;"
+		event-set__movesword="_event: click; _target:#sword_name; position:-600 200 -40;"
+		event-set__guidetextdisappear="_event: click; _target:#guidetext1; position:-600 200 -40;"
+		event-set__callupjoystick="_event: click; _target:#f9_js; position:-210 -40 -40;"
+		event-set__callupjoysticktxt="_event: click; _target:#jstxt; position:-215 -40 -90;"
+		>
+	</a-entity>
+	<!--Navi Text-->
+	<a-entity id="guidetext1"text="value: Uh oh... Your mission aboard falcon9 has had to make a crash landing in ireland on its way to London. You fix the ship, you must answer the questions throughout the map. You must first re-watch the ship making its landing (Interact to continue) Good luck.; color: white" scale="70 70 70" position="-215 -40 -90" rotation="0 -120 0"></a-entity>
+	<a-entity id="jstxt"text="value: Now, use the flightstick to land the ship.; color: white" scale="70 70 70" position="-215 -4000 -90" rotation="0 -120 0"></a-entity>
+	<a-entity id="findparttxt"text="value: Great! You are so close to making a safe emergency landing. Now, it is time for you to explore to continue! (Hint: Visit the landing site); color: white" scale="70 70 70" position="-215 -4000 -90" rotation="0 -120 0"></a-entity>
+	<a-entity id="findthepart"text="value: Now that the ship has landed, find the missing computer; color: white" scale="70 70 70" position="-215 -4000 -90" rotation="0 0 0"></a-entity>
+	<a-entity id="winmsg"text="value: YOU WINNER!! You have fixed the ship! Now look for it to take off. (The End) color: white" scale="70 70 70" position="-108 -1000 -30" rotation="0 0 0"></a-entity>
+		<!--2nd step - Clicking on Joystick Moves Falcon 9 to almost landed position-->
+
+		<a-entity id="f9_js" gltf-model="#joystick" scale="5 5 5" position="-210 -4000 -40"
+		event-set__movef9_1st="_event: click; _target:#falcon_9; position:108 -10 68.710;"
+		event-set__joystickgone="_event: click; _target:#f9_js; position:108 -10000 68.710;"
+		event-set__joysticktxtgone="_event: click; _target:#jstxt; position:108 -10000 68.710;"
+		event-set__callupshortfinaltxt="_event: click; _target:#findparttxt; position:-215 -40 -90;"
+		event-set__setquestionsvis="_event:click; _target:#question1entity; visible:true;"
+		></a-entity>
+
+		<a-entity id="falcon_9" gltf-model="#falcon9" scale="0.1 0.1 0.1" position="-1000 -10 -40" rotation="0 -120 0" animation="property:rotation; 
+		to:0 720 0;
+		loop:false;
+		dur:10000;
+		easing:linear;
+		"
+		
+		
+		></a-entity>
+		
+	
+		<!--3rd step, Selection Boxes Appear, answer question-->
+		
+		<a-entity id="bx_1txt" text="value: Try again!; color: red" scale="50 50 50" position="112 -700 68" rotation="0 0 0"></a-entity>
+		<a-entity id="bx_3txt" text="value: Nope!; color: red" scale="50 50 50" position="112 -700 68" rotation="0 0 0"></a-entity>
+		
+		<a-entity id="question1entity" visible="false">
+		<a-entity id="q1txt" text="value: In what year did SpaceX have their first mission? (Answer to land the ship) Red - 1999 | Green - 2003 | Blue - 2009; color: white" scale="50 50 50" position="112 -40 68" rotation="0 0 0"></a-entity>
+		<a-box id="QBox_1" color="#AA0000" position="103 -50 68" scale="3 3 3"
+		event-set__wrong01="_event: click; _target:#bx_1txt; position:103 -50 68;"
+		event-set__box01_disappear="_event: click; _target:#QBox_1; position:103 -700 68;"
+		></a-box>
+
+		<a-box id="QBox_2" color="#00AA00" position="108 -50 68" scale="3 3 3"
+		event-set__q1_answer="_event: click; _target:#falcon_9; position:108 -70 68.710;"
+		event-set__textgone="_event: click; _target:#q1txt; position:108 -600 68.710;"
+		event-set__q1gone="_event: click; _target:#QBox_1; position:108 -600 68.710;"
+		event-set__q2gone="_event: click; _target:#QBox_2; position:108 -600 68.710;"
+		event-set__q3gone="_event: click; _target:#QBox_3; position:108 -600 68.710;"
+		event-set__q1_wrongtxt_gone="_event: click; _target:#bx_1txt; position:108 1000 68.710;"
+		event-set__q3_wrongtxt_gone="_event: click; _target:#bx_3txt; position:108 1000 68.710;"
+		event-set__findcomputertxt="_event: click; _target:#findthepart; position:70 -50 68;"
+		event-set__setcomputerpos="_event: click; _target:#lostcomputer; position:234 -70 -112;"
+		event-set__guideforq1_bone="_event: click; _target:#findparttxt; position:234 -7000 -112;"
+		></a-box>
+
+		<a-box id="QBox_3" color="#0000AA" position="113 -50 68" scale="3 3 3"
+		event-set__wrong03="_event: click; _target:#bx_3txt; position:150 -50 68;"
+		event-set__box03_disappear="_event: click; _target:#QBox_3; position:103 -700 68;"
+		></a-box>
+		
+		<a-entity text="value: Hello World; color: red" scale="0.1 0.1 0.1"></a-entity>
+	</a-entity>
+
+	<!-- Find the computer-->
+	<a-entity id="lostcomputer" gltf-model="#computer" scale="0.1 0.1 0.1" position="108 -700 68.710;"
+	event-set__computertxtgone="_event: click; _target:#findthepart; position:-300 1500 -100;"
+	event-set__setcamforlaunch="_event: click; _target:#CAMERACONTROL1; position:300 50 -100; rotation:0 -15 0; "
+	event-set__make_og_false="_event: click; _target:#falcon_9; position:-108 -10000 -50"
+	event-set__make_copy_true="_event: click; _target:#ssmove; visible:true"
+	event-set__computergone="_event: click; _target:#lostcomputer; position:-108 -1000 -50;"
+	event-set__setwintxt="_event: click; _target:#winmsg; position:-201 50 378 rotation:0 -114 0"
+	></a-entity>
+
+<!--position:0 0 0; rotation:0 0 0-->
+
+
+				
+		<a-sky src="#sky"></a-sky>
+
+	</a-scene>
+</body>
+
+</html>
